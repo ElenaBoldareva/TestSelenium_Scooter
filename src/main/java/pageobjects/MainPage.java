@@ -1,7 +1,7 @@
 package pageobjects;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -49,7 +49,7 @@ public class MainPage {
         driver.findElement(severalScootersButton).click();
     }     //2
 
-    public String getTextSeveralScootersPanel(){
+    public String getTextSeveralScootersPanel() {
         return driver.findElement(severalScootersPanel).getText();          //2.1
     }
 
@@ -57,7 +57,7 @@ public class MainPage {
         driver.findElement(rentalTimeButton).click();
     }       //3
 
-    public String getTextRentalTimePanel(){
+    public String getTextRentalTimePanel() {
         return driver.findElement(rentalTimePanel).getText();          //3.1
     }
 
@@ -65,14 +65,15 @@ public class MainPage {
         driver.findElement(orderScooterTodayButton).click();
     }       //4
 
-    public String getTextOrderScooterTodayPanel(){
+    public String getTextOrderScooterTodayPanel() {
         return driver.findElement(orderScooterPanel).getText();          //4.1
     }
 
     public void clickExtendOrderOrReturnScooterButton() {               //5
         driver.findElement(extendOrderOrReturnScooterButton).click();
     }
-    public String getTextExtendOrderOrReturnScooterPanel(){         //5.1
+
+    public String getTextExtendOrderOrReturnScooterPanel() {         //5.1
         return driver.findElement(extendOrderOrReturnScooterPanel).getText();
     }
 
@@ -80,7 +81,7 @@ public class MainPage {
         driver.findElement(chargeWithScooterButton).click();
     }       //6
 
-    public String getTextChargeWithScooterPanel(){                                           //6.1
+    public String getTextChargeWithScooterPanel() {                                           //6.1
         return driver.findElement(chargeWithScooterPanel).getText();
     }
 
@@ -88,7 +89,7 @@ public class MainPage {
         driver.findElement(canCancelOrderButton).click();
     }       //7
 
-    public String getTextCanCancelOrderPanel(){                                           //7.1
+    public String getTextCanCancelOrderPanel() {                                           //7.1
         return driver.findElement(canCancelOrderPanel).getText();
     }
 
@@ -96,11 +97,11 @@ public class MainPage {
         driver.findElement(bringOutsideMKADButton).click();
     }       //8
 
-    public String getTextBringOutsideMKADPanel(){                                           //7.1
+    public String getTextBringOutsideMKADPanel() {                                           //7.1
         return driver.findElement(bringOutsideMKADPanel).getText();
     }
 
-    public void waitForLoad(int seconds){
+    public void waitForLoad(int seconds) {
         new WebDriverWait(driver, Duration.ofSeconds(seconds))
                 .until(ExpectedConditions.visibilityOfElementLocated(By.className("Home_FAQ__3uVm4")));
     }
@@ -111,6 +112,43 @@ public class MainPage {
 
     public void clickDownButtonOrderButton() {
         driver.findElement(downButtonOrderButton).click();
+    }
+
+    public void clickQuestion(int questionNumber) {
+        By questionLocator = By.id("accordion__heading-" + questionNumber);
+        WebElement questionElement = driver.findElement(questionLocator);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", questionElement);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(questionElement)
+                .click()
+                .build()
+                .perform();
+    }
+
+    public String getAnswer(int questionNumber) {
+        By answerLocator = By.xpath(".//div[@id='accordion__panel-" + questionNumber + "']/p");
+        return driver.findElement(answerLocator).getText();
+    }
+
+    public void waitForLoadQuestion(int seconds, int questionNumber) {
+        By questionLocator = By.id("accordion__heading-" + questionNumber);
+        new WebDriverWait(driver, Duration.ofSeconds(seconds))
+                .until(ExpectedConditions.visibilityOfElementLocated(questionLocator));
+    }
+
+    public void waitForLoadAnswer(int seconds, int answerNumber) {
+        By answerLocator = By.xpath(".//div[@id='accordion__panel-" + answerNumber + "']/p");
+        new WebDriverWait(driver, Duration.ofSeconds(seconds))
+                .until(ExpectedConditions.visibilityOfElementLocated(answerLocator));
+    }
+
+    public void scrollToQuestion(int questionNumber) {
+        By questionLocator = By.id("accordion__heading-" + questionNumber);
+        Actions actions = new Actions(driver);
+        actions.moveToElement(driver.findElement(questionLocator))
+                .click()
+                .build()
+                .perform();
     }
 }
 
