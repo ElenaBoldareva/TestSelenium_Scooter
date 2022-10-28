@@ -61,5 +61,13 @@ public class MainPage {
         new WebDriverWait(driver, Duration.ofSeconds(seconds))
                 .until(ExpectedConditions.visibilityOfElementLocated(answerLocator));
     }
+
+    public void clickOrderButton(String orderButton) {
+        if ("up".equals(orderButton)) {
+            clickUpOrderButton();
+        } else if ("down".equals(orderButton)) {
+            clickDownButtonOrderButton();
+        }
+    }
 }
 

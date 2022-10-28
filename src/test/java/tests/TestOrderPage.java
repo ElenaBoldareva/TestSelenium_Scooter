@@ -18,6 +18,7 @@ import java.time.Duration;
 
 @RunWith(Parameterized.class)
 public class TestOrderPage {
+    private final String orderButton;
     private final String firstName;
     private final String lastName;
     private final String address;
@@ -28,10 +29,11 @@ public class TestOrderPage {
     private final String scooterColor;
     private final String comments;
     private WebDriver driver;
-    private final int defaultTimeOut = 10;
+    private final int defaultTimeOut = 60;
     private final String successfulOrderText = "Заказ оформлен";
 
-    public TestOrderPage(String firstName, String lastName, String address, String metro, String phone, String whereToBringScooter, String rentalPeriod, String scooterColor, String comments) {
+    public TestOrderPage(String orderButton, String firstName, String lastName, String address, String metro, String phone, String whereToBringScooter, String rentalPeriod, String scooterColor, String comments) {
+        this.orderButton = orderButton;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -53,6 +55,7 @@ public class TestOrderPage {
         } else if ("ff".equals(br)) {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
             firefoxOptions.setHeadless(true);
+            firefoxOptions.setAcceptInsecureCerts(false);
             driver = new FirefoxDriver(firefoxOptions);
         } else {
             ChromeOptions chromeOptions = new ChromeOptions();
@@ -71,38 +74,20 @@ public class TestOrderPage {
     @Parameterized.Parameters
     public static Object[][] getPersonData() {
         return new Object[][]{
-                {"Иван", "Крокодилов", "Ул.Мира 55", "Черкизовская", "89652315465", "29.10.2022", "сутки", "black", "Спасибо!"},
-                {"Людмила", "Чеснокова", "Ул.Ленина 14", "Теплый стан", "89052664415", "01.11.2022", "двое суток", "grey", "Спасибо!"},
-                {"Алексей", "Воронин", "Ул.Вишневая 98", "Сокольники", "89982323313", "03.11.2022", "семеро суток", null, "Вход со двора"}
+                {"up", "Иван", "Крокодилов", "Ул.Мира 55", "Черкизовская", "89652315465", "29.10.2022", "сутки", "black", "Спасибо!"},
+                {"down", "Людмила", "Чеснокова", "Ул.Ленина 14", "Теплый стан", "89052664415", "01.11.2022", "двое суток", "grey", "Спасибо!"},
+                {"up", "Алексей", "Воронин", "Ул.Вишневая 98", "Сокольники", "89982323313", "03.11.2022", "семеро суток", null, "Вход со двора"}
         };
     }
 
     @Test
-    public void checkOrderByUpButton() {
+    public void checkOrder() {
         MainPage mainPage = new MainPage(driver);
         OrderPage orderPage = new OrderPage(driver);
-//        mainPage.waitForLoad(startUpTimeOut);
-        mainPage.clickCookieButton();
-//        mainPage.waitForLoad(afterCookieTimeOut);
-        mainPage.clickUpOrderButton();
-        orderPage.fillPersonForm(firstName, lastName, address, metro, phone);
-        orderPage.clickNextButton();
-        orderPage.fillRentForm(whereToBringScooter, rentalPeriod, scooterColor, comments);
-        orderPage.clickOrderButton();
-        orderPage.clickWantToPlaceAnOrderYesButton();
 
-        String actualText = orderPage.getOrderModalHeaderText();
-        Assert.assertTrue(actualText.contains(successfulOrderText));
-    }
-
-    @Test
-    public void checkOrderByDownButton() {
-        MainPage mainPage = new MainPage(driver);
-        OrderPage orderPage = new OrderPage(driver);
-//        mainPage.waitForLoad(startUpTimeOut);
         mainPage.clickCookieButton();
-//        mainPage.waitForLoad(afterCookieTimeOut);
-        mainPage.clickDownButtonOrderButton();
+        mainPage.clickOrderButton(orderButton);
+
         orderPage.fillPersonForm(firstName, lastName, address, metro, phone);
         orderPage.clickNextButton();
         orderPage.fillRentForm(whereToBringScooter, rentalPeriod, scooterColor, comments);
