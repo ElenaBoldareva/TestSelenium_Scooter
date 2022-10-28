@@ -11,8 +11,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import pageobjects.MainPage;
 
-import java.time.Duration;
-
 
 public class TestMainPage {
     private WebDriver driver;
